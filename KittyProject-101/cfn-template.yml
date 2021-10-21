@@ -45,8 +45,8 @@ Resources:
           #wget $FOLDER/cat1.jpg
           #wget $FOLDER/cat2.jpg
           #wget $FOLDER/cat3.png
-          for file in ${FILES[@]}
-            do wget $file
+          for FILE in ${FILES[@]}
+            do wget $FILE
           fi
           systemctl start httpd
           systemctl enable httpd
