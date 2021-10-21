@@ -38,12 +38,16 @@ Resources:
           sudo yum -y update
           yum install -y httpd 
           FOLDER="https://raw.githubusercontent.com/twlkns/my-repository-1/master/KittyProject-101/static-web"
+          FILES=["index.html" "cat0.jpg" "cat1.jpg" "cat2.jpg" "cat3.jpg"]
           cd /var/www/html
-          wget $FOLDER/index.html
-          wget $FOLDER/cat0.jpg
-          wget $FOLDER/cat1.jpg
-          wget $FOLDER/cat2.jpg
-          wget $FOLDER/cat3.png
+          #wget $FOLDER/index.html
+          #wget $FOLDER/cat0.jpg
+          #wget $FOLDER/cat1.jpg
+          #wget $FOLDER/cat2.jpg
+          #wget $FOLDER/cat3.png
+          for file in ${FILES[@]}
+            do wget $file
+          fi
           systemctl start httpd
           systemctl enable httpd
 Outputs:
