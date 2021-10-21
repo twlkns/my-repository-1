@@ -21,7 +21,7 @@ Resources:
           FromPort: 22 #if allowing range of ports FromPort is starting port Range
           ToPort: 22 #if allowing range of ports ToPort is ending port range
           IpProtocol: tcp          
-    WebServerHost:
+  WebServerHost:
     Type: AWS::EC2::Instance
     Properties: 
       ImageId: ami-02e136e904f3da870
@@ -31,20 +31,24 @@ Resources:
         - !Ref WebServerSecurityGroup
       Tags: #https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/pseudo-parameter-reference.html
         - Key: Name
-          Value: !Sub Name Server of ${AWS::StachName} 
+          Value: !Sub Name Server of ${AWS::StackName} 
       UserData: #userdata is running as root user!
         Fn::Base64: |
           #! /bin/bash
           sudo yum -y update
           yum install -y httpd 
-          FOLDER=
-
-      Volumes: 
-        - Volume
-
-
-      Tags:
-        - Key:
-          Value:
-
-Output:
+          FOLDER="https://raw.githubusercontent.com/twlkns/my-repository-1/master/KittyProject-101/static-web"
+          cd /var/www/html
+          wget $FOLDER/index.html
+          wget $FOLDER/cat0.jpg
+          wget $FOLDER/cat1.jpg
+          wget $FOLDER/cat2.jpg
+          wget $FOLDER/cat3.png
+          systemctl start httpd
+          systemctl enable httpd
+Outputs:
+  WebsiteURL:
+    Value: !Sub 
+      - http://${PublicAddress}
+      - PublicAddress: !GetAtt WebServerHost.PublicDnsName
+    Description: Kittens Carousel Application URL
