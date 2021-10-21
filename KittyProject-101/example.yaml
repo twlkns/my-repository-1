@@ -1,0 +1,19 @@
+---
+AWSTemplateFormatVersion: 2010-09-09
+Description:
+   AWS Cloudformation Template creating an EC2 Instance.  
+   The CloudFront User will provide answers to parameters, such as KeyPair
+
+Parameters:
+
+Metadata:
+
+Mappings:
+
+Conditions:
+
+Resources:
+
+Transform:
+
+Outputs:

@@ -1,0 +1,50 @@
+---
+AWSTemplateFormatVersion: 2010-09-09
+Description:
+  This CloudFormation Template was written for running Kittens Carousel Static Website on EC2. 
+  Kittens Carousel Static Website will be deployed on Amazon Linux 2 (ami-074cce78125f09d61) 
+  EC2 Instance with custom security group which allows http connections on port 80 and 
+  ssh port 22 from anywhere. Kittens Carousel Static Website 
+  is downloaded from my Public Github repository, then deployed on Apache Web Server.
+Resources:
+  WebServerSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Enable HTTP for Apache Web Server and SSH for Secure Connection
+      #VpcId: Would only need to add VPC ID if adding this instance to an existing VPC ID
+      SecurityGroupIngress:
+        - CidrIp: 0.0.0.0/0
+          FromPort: 80 #if allowing range of ports FromPort is starting port Range
+          ToPort: 80 #if allowing range of ports ToPort is ending port range
+          IpProtocol: tcp
+        - CidrIp: 98.195.192.33/32
+          FromPort: 22 #if allowing range of ports FromPort is starting port Range
+          ToPort: 22 #if allowing range of ports ToPort is ending port range
+          IpProtocol: tcp          
+    WebServerHost:
+    Type: AWS::EC2::Instance
+    Properties: 
+      ImageId: ami-02e136e904f3da870
+      InstanceType: t2.micro
+      KeyName: EC2KeyPair
+      SecurityGroupIds: #Can attach more than one Security Group to an EC2 Instance
+        - !Ref WebServerSecurityGroup
+      Tags: #https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/pseudo-parameter-reference.html
+        - Key: Name
+          Value: !Sub Name Server of ${AWS::StachName} 
+      UserData: #userdata is running as root user!
+        Fn::Base64: |
+          #! /bin/bash
+          sudo yum -y update
+          yum install -y httpd 
+          FOLDER=
+
+      Volumes: 
+        - Volume
+
+
+      Tags:
+        - Key:
+          Value:
+
+Output:
