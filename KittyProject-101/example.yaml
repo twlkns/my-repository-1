@@ -9,6 +9,9 @@ Parameters:
 Metadata:
 
 Mappings:
+  RegionMap:
+    us-east-1:
+      AMI: 
 
 Conditions:
 
