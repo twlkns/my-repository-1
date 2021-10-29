@@ -1,14 +1,18 @@
+#render_template renders from a template HTML file from the template folder
+#request provides the ability to get or push data from the html document
+
 from flask import Flask, render_template, request
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 
-# - configure required environmental variables for SQLite
+# - configure required environmental variables for SQLite and SQLite DB Name connectivity via SQLAlchemy
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///./email.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
 # - drop users table if exists, create new users table and add some rows for sample
+# - columns username AND email
 drop_table = 'DROP TABLE IF EXISTS users;'
 users_table = """ 
 CREATE TABLE users(
@@ -23,9 +27,9 @@ VALUES
     ("Dohee", "dohe@microsoft.com"),
 	("Elif", "elif@facebook.com");
 """
-
-
 # - Execute sql commands and commit them
+# - first drop the table, second create the table, third insert values into table (in this order)
+# - if query changes the database, have to run .commit() to save changes to database
 db.session.execute(drop_table)
 db.session.execute(users_table)
 db.session.execute(data)
@@ -33,6 +37,7 @@ db.session.commit()
 
 # - Write a function named `find_emails` which find emails using keyword from the user table in the db,
 # - and returns result as tuples `(name, email)`.
+# - function reads from the emails.html (/) page. Search for a UserName in database, return all rows
 def find_emails(keyword):
     query = f"""
     SELECT * FROM users WHERE username like '%{keyword}%';
@@ -43,8 +48,8 @@ def find_emails(keyword):
         user_emails = [("Not Found", "Not Found")]
     return user_emails
 
-
 # - Write a function named `insert_email` which adds new email to users table the db.
+# - reads from the add-email.html file form to add new email to users table
 def insert_email(name,email):
     query = f"""
     SELECT * FROM users WHERE username like '{name}'
@@ -65,7 +70,6 @@ def insert_email(name,email):
         response = f"User {name} already exist"
     return response
 
-
 # - Write a function named `emails` which finds email addresses by keyword using `GET` and `POST` methods,
 # - using template files named `emails.html` given under `templates` folder
 # - and assign to the static route of ('/')
@@ -77,7 +81,6 @@ def emails():
         return render_template('emails.html', name_emails=user_emails, keyword=user_app_name, show_result=True)
     else:
         return render_template('emails.html', show_result=False)
-
 
 # - Write a function named `add_email` which inserts new email to the database using `GET` and `POST` methods,
 # - using template files named `add-email.html` given under `templates` folder
@@ -91,7 +94,6 @@ def add_email():
         return render_template('add-email.html', result_html=result_app, show_result=True)
     else:
         return render_template('add-email.html', show_result=False)
-
 
 # - Add a statement to run the Flask application which can be reached from any host on port 80.
 if __name__=='__main__':
