@@ -77,7 +77,9 @@ def insert_email(name,email):
 def emails():
     if request.method == 'POST':
         user_app_name = request.form['user_keyword']
-        user_emails = find_emails(user_app_name)
+        user_emails = find_emails(user_app_name) #using this function to find emails, results are assigned to user_emails variable
+        #send results to HTML file usign render_template
+        #keyword = what the user entered into the form
         return render_template('emails.html', name_emails=user_emails, keyword=user_app_name, show_result=True)
     else:
         return render_template('emails.html', show_result=False)
@@ -85,11 +87,14 @@ def emails():
 # - Write a function named `add_email` which inserts new email to the database using `GET` and `POST` methods,
 # - using template files named `add-email.html` given under `templates` folder
 # - and assign to the static route of ('/add')
+# - if user goes directly to add-email.html file, it will be a GET method - show_result=False
 @app.route('/add', methods=['GET', 'POST'])
 def add_email():
     if request.method == 'POST':
+        #username and useremail variables come from the add-email.html (NAME and ID)
         user_app_name = request.form['username']
         user_app_email = request.form['useremail']
+        #call insert_email function
         result_app = insert_email(user_app_name, user_app_email)
         return render_template('add-email.html', result_html=result_app, show_result=True)
     else:
