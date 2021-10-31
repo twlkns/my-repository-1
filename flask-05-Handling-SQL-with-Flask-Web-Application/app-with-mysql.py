@@ -7,7 +7,7 @@ app = Flask(__name__)
 
 # Configure mysql database - Environment variables
 # get DATABASE ENDPOINT NAME from EC2 Instance
-app.config['MYSQL_DATABASE_HOST'] = 'portfolio-db.ciixdj8ksmel.us-east-2.rds.amazonaws.com'
+app.config['MYSQL_DATABASE_HOST'] = 'portfolio-db.cjozkivtt72w.us-east-1.rds.amazonaws.com'
 app.config['MYSQL_DATABASE_USER'] = 'admin'
 app.config['MYSQL_DATABASE_PASSWORD'] = 'Clarusway_1'
 app.config['MYSQL_DATABASE_DB'] = 'clarusway'
@@ -111,5 +111,5 @@ def add_email():
 
 # Add a statement to run the Flask application which can be reached from any host on port 80.
 if __name__ == '__main__':
-   #app.run(debug=True)
-    app.run(host='0.0.0.0', port=80)
+   app.run(debug=True)
+   # app.run(host='0.0.0.0', port=80)
