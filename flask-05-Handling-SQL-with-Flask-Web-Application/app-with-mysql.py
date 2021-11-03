@@ -7,7 +7,7 @@ app = Flask(__name__)
 
 # Configure mysql database - Environment variables
 # get DATABASE ENDPOINT NAME from EC2 Instance
-app.config['MYSQL_DATABASE_HOST'] = 'portfolio-db.cjozkivtt72w.us-east-1.rds.amazonaws.com'
+app.config['MYSQL_DATABASE_HOST'] = 'database-1.cjozkivtt72w.us-east-1.rds.amazonaws.com'
 app.config['MYSQL_DATABASE_USER'] = 'admin'
 app.config['MYSQL_DATABASE_PASSWORD'] = 'Clarusway_1'
 app.config['MYSQL_DATABASE_DB'] = 'clarusway'
