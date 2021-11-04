@@ -1,0 +1,58 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: |
+  CloudFormation Template for Roman Numerals Converter Application.
+  This template runs Python Flask Web Application on Amazon Linux 2
+  (ami-01cc34ab2709337aa) instance with custom security group
+  allowing http connections on port 80 and SSH connection on port 22.
+  Roman Numerals Converter Application is downlaed from GitHub
+  repository, then installed on Flask.
+Parameters:
+  KeyName:
+    Description: Enter the name of your Key Pair for SSH Connection.
+    Type: AWS::EC2::KeyPair::KeyName
+    Default: EC2KeyPair
+    ConstraintDescription: Must be the name of an existing EC2 KeyPair.      
+Resources:
+  WebServerSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: "Enable HTTP for Flask Web Server and SSH port to connect to EC2" # Required
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 98.195.192.33/32
+  WebServerHost:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-01cc34ab2709337aa
+      InstanceType: t2.micro
+      KeyName: !Ref KeyName
+      SecurityGroupIds:
+        - !Ref WebServerSecurityGroup
+      Tags:
+        - Key: Name
+          Value: !Sub Web Server of ${AWS::StackName} Stack
+      UserData: !!Base64  |
+        #! /bin/bash
+        yup update -y
+        yum install python3 -y
+        pip3 install flask
+        cd /home/ec2-user
+        FOLDER="https://github.com/twlkns/my-repository-1/blob/master/Project-001-Roman-Numerals-Converter"
+        wget "${FOLDER}"/app.py
+        mkdir templates && cd templates
+        wget "${FOLDER}"/templates/index.html
+        wget "${FOLDER}"/templates/result.html
+        cd ..
+        python3 app.py
+Outputs:
+  WebSiteURL:
+    Value: !Sub
+      - http://${PublicAddress}
+      - PublicAddress: !!GetAtt WebServerHost.PublicDnsName
+    Description: Roman Numeral Converter Application URL
