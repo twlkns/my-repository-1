@@ -37,7 +37,7 @@ Resources:
       Tags:
         - Key: Name
           Value: !Sub Web Server of ${AWS::StackName} Stack
-      UserData: !!Base64  |
+      UserData: !Base64  |
         #! /bin/bash
         yup update -y
         yum install python3 -y
@@ -54,5 +54,5 @@ Outputs:
   WebSiteURL:
     Value: !Sub
       - http://${PublicAddress}
-      - PublicAddress: !!GetAtt WebServerHost.PublicDnsName
+      - PublicAddress: !GetAtt WebServerHost.PublicDnsName
     Description: Roman Numeral Converter Application URL
